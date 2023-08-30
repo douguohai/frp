@@ -71,9 +71,27 @@ func (svr *Service) RunAdminServer(address string) (err error) {
 		http.Redirect(w, r, "/static/", http.StatusMovedPermanently)
 	})
 
+	// 创建 CORS 处理函数
+	corsHandler := func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+			// 设置允许的源
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+
+			// 设置允许的方法
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
+
+			// 设置允许的请求头
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+			// 继续处理请求
+			h.ServeHTTP(w, r)
+		})
+	}
+
 	server := &http.Server{
 		Addr:         address,
-		Handler:      router,
+		Handler:      corsHandler(router),
 		ReadTimeout:  httpServerReadTimeout,
 		WriteTimeout: httpServerWriteTimeout,
 	}
