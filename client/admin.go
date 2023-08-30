@@ -86,6 +86,11 @@ func (svr *Service) RunAdminServer(address string) (err error) {
 
 			w.Header().Set("Access-Control-Allow-Credentials", "true")
 
+			if r.Method == "OPTIONS" {
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+
 			// 继续处理请求
 			h.ServeHTTP(w, r)
 		})
