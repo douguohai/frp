@@ -76,15 +76,13 @@ func (svr *Service) RunAdminServer(address string) (err error) {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 			// 设置允许的源
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("origin"))
 
 			// 设置允许的方法
 			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
 
 			// 设置允许的请求头
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-
-			w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 			// 继续处理请求
 			h.ServeHTTP(w, r)
