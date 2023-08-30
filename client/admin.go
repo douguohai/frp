@@ -84,6 +84,8 @@ func (svr *Service) RunAdminServer(address string) (err error) {
 			// 设置允许的请求头
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
+			w.Header().Set("Access-Control-Allow-Credentials", "true")
+
 			// 继续处理请求
 			h.ServeHTTP(w, r)
 		})
