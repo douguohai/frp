@@ -29,11 +29,18 @@ import (
 var (
 	httpServerReadTimeout  = 60 * time.Second
 	httpServerWriteTimeout = 60 * time.Second
+	router                 = mux.NewRouter()
 )
 
+func (svr *Service) GetAdminRouter() *mux.Router {
+	return router
+}
+
+func (svr *Service) AddAdminRouter(path, methods string, f func(http.ResponseWriter, *http.Request)) {
+	router.HandleFunc(path, f).Methods(methods)
+}
+
 func (svr *Service) RunAdminServer(address string) (err error) {
-	// url router
-	router := mux.NewRouter()
 
 	router.HandleFunc("/healthz", svr.healthz)
 
